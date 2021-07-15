@@ -4,6 +4,7 @@ import (
 	"fmt"
 )
 
+// Creating struct 
 type Contact struct {
 	id        int
 	phone     string
@@ -17,6 +18,7 @@ type linkedList struct {
 	length int
 }
 
+// Adding to struct 
 func (l *linkedList) prepend(n *Contact) {
 	second := l.head
 	l.head = n
@@ -24,19 +26,41 @@ func (l *linkedList) prepend(n *Contact) {
 	l.length++
 }
 
+// Searching for phone number by name
 func (l linkedList) printContact(firstname string) {
 	toPrint := l.head
-	for l.length != 0 {
-		//fmt.Printf("%d ", toPrint.id)
-		//fmt.Printf(toPrint.phone)
-		//toPrint = toPrint.next
-		l.length--	
+	for i := 0; i < l.length; i++ {
+		//l.length--
 		if firstname == toPrint.firstname {
 			fmt.Printf("%s's phone number is: %s ", firstname, toPrint.phone)
-		}
+			return
+		} 
 		toPrint = toPrint.next
 	}
-	//fmt.Printf("\n")
+}
+
+// Deleting ...
+func (l *linkedList) deleteContact(firstname string) {
+	if l.length == 0 {
+		return
+	}
+
+	if l.head.firstname == firstname {
+		l.head = l.head.next
+		l.length--
+		return
+	}
+	
+	previousToDelete := l.head
+	for previousToDelete.next.firstname != firstname {
+		if previousToDelete.next.next ==nil {
+			return
+		}
+		previousToDelete = previousToDelete.next
+	}
+		
+	previousToDelete.next = previousToDelete.next.next
+	l.length--
 }
 
 func main() {
@@ -68,12 +92,10 @@ func main() {
 	myContact.prepend(c0)
 	myContact.prepend(c1)
 	myContact.prepend(c2)
-
-  // Put here the name of the person who's number you looking for
+	
+	// Put person's name to delete
+	myContact.deleteContact("David")
+	
+	// Put person's name whom number you want to see
 	myContact.printContact("Peter")
-	/*
-		fmt.Println(c0)
-		fmt.Println(c1)
-		fmt.Println(c2)
-	*/
 }
