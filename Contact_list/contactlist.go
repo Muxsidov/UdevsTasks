@@ -13,17 +13,14 @@ type Contact struct {
 	next      *Contact
 }
 
-type linkedList struct {
-	head   *Contact
-	length int
+type contactManager struct {
+	xp := []Contact{}
 }
 
 // Adding to struct 
-func (l *linkedList) prepend(n *Contact) {
-	second := l.head
-	l.head = n
-	l.head.next = second
-	l.length++
+func (l *linkedList) Add(n *Contact) {
+	
+
 }
 
 // Searching for phone number by name
