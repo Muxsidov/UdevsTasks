@@ -1,0 +1,24 @@
+// https://www.youtube.com/watch?v=YS4e4q9oBaU
+// 5:02:42
+
+package main
+
+import (
+	"fmt"
+)
+
+func main() {
+	var w Writer = ConsoleWriter{}
+	w.Write([]byte("hello, Go!"))
+}
+
+type Writer interface {
+	Write([]byte) (int, error)
+}
+
+type ConsoleWriter struct{}
+
+func (ConsoleWriter) Write(data []byte) (int, error) {
+	n, err := fmt.Println(string(data))
+	return n, err
+}
