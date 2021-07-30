@@ -19,7 +19,7 @@ type Closer interface {
 	Close() error
 }
 
-type ConsoleWriter interface {
+type WriterCloser interface {
 	Writer
 	Closer
 }
@@ -47,4 +47,21 @@ func (bwc *BufferedWriterCloser) Write(data []byte) (int, error) {
 	}
 
 	return n, nil
+}
+
+func (bwc *BufferedWriterCloser) Close() error {
+	for bwc.buffer.Len() > 0 {
+		data := bwc.buffer.Next(8)
+		_, err := fmt.Println(string(data))
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func NewBufferedWriterCloser() *BufferedWriterCloser {
+	return &BufferedWriterCloser{
+		buffer: bytes.NewBuffer([]byte{}),
+	}
 }
