@@ -1,29 +1,138 @@
 package main
 
-// importing required packages
 import (
 	"fmt"
 )
 
-type id struct {
-	id int
+type Contact struct {
+	Id                 int
+	Task_Name          string
+	Whomtaskisgiven    string
+	Deadline           int
+	Explaining_of_task string
 }
 
-type task_list struct {
-	name     string
-	deadline string
+type ContactManager struct {
+	contacts []Contact
 }
 
+func NewContactManager() ContactManager {
+	cm := ContactManager{}
+	cm.contacts = []Contact{}
 
+	return cm
+}
+
+func (cm *ContactManager) Add(c *Contact) *Contact {
+	cm.contacts = append(cm.contacts, *c)
+	id := len(cm.contacts) - 1
+	return &cm.contacts[id]
+}
+
+func (cm *ContactManager) Update(c *Contact) *Contact {
+	contact := &cm.contacts[c.Id]
+	contact.Task_Name = c.Task_Name
+	contact.Whomtaskisgiven = c.Whomtaskisgiven
+	contact.Deadline = c.Deadline
+	contact.Explaining_of_task = c.Explaining_of_task
+	return contact
+}
+
+func (cm *ContactManager) Delete(id int) {
+	cm.contacts = append(cm.contacts[:id], cm.contacts[id+1:]...)
+}
+
+func (cm *ContactManager) ContactList() {
+	for _, c := range cm.contacts {
+		c.ContactDetail()
+	}
+}
+
+func (c *Contact) ContactDetail() {
+	fmt.Println("**************************")
+	fmt.Println("name:", c.Task_Name)
+	fmt.Println("id:", c.Id)
+	fmt.Println("gender:", c.Whomtaskisgiven)
+	fmt.Println("phone:", c.Deadline)
+	fmt.Println("mail:", c.Explaining_of_task)
+	fmt.Println()
+}
+
+func (c *ContactManager) GetAllContacts() []Contact {
+	return c.contacts
+}
+
+func Menu() {
+	fmt.Println("**************************")
+	fmt.Println("*          Menu          *")
+	fmt.Println("**************************")
+
+	fmt.Println("List of all tasks - 1")
+	fmt.Println("Add new task      - 2")
+	fmt.Println("Update a task     - 3")
+	fmt.Println("Delete a task     - 4")
+	fmt.Println("Exit                 - 5")
+	fmt.Println("**************************")
+}
+
+func EnterDetails(c *Contact) {
+	var phone int
+	var name, gender, mail string
+
+	fmt.Print("Enter name: ")
+	fmt.Scanln(&name)
+	fmt.Print("Enter gender: ")
+	fmt.Scanln(&gender)
+	fmt.Print("Enter phone: ")
+	fmt.Scanln(&phone)
+	fmt.Print("Enter mail: ")
+	fmt.Scanln(&mail)
+
+	c.Task_Name = name
+	c.Whomtaskisgiven = gender
+	c.Deadline = phone
+	c.Explaining_of_task = mail
+}
 
 func main() {
-	id_0 := id{0}
-	task1 := task_list{name: "Declare an array", deadline: "01.22.2020"}
+	var choice int
+	var id int
+	var cm ContactManager
+	var c Contact
 
-	//var mp map[id]task_list
+	for {
+		Menu()
+		fmt.Print("Enter a your choice: ")
+		fmt.Scan(&choice)
 
-	sample := map[id]task_list{id_0: task1}
-	fmt.Print(sample)
+		if choice == 1 {
+			cm.ContactList()
+		} else if choice == 2 {
+			c.Id = len(cm.contacts)
+			EnterDetails(&c)
+			cm.Add(&c)
+		} else if choice == 3 {
+			fmt.Print("Enter id: ")
+			fmt.Scanln(&id)
 
+			if id <= len(cm.contacts)-1 {
+				c.Id = id
+				EnterDetails(&c)
+				cm.Update(&c)
+			} else {
+				fmt.Println("Entered id does not exists.")
+			}
+		} else if choice == 4 {
+			fmt.Print("Enter id: ")
+			fmt.Scanln(&id)
+
+			if id <= len(cm.contacts)-1 {
+				cm.Delete(id)
+			} else {
+				fmt.Println("Entered id does not exists.")
+			}
+		} else if choice == 5 {
+			break
+		}
+	}
 }
-
