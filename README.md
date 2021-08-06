@@ -1,5 +1,5 @@
-In git_tasks you'll find - 4.Tasks for syntax:(Fibonacci;FizBuzz;Palindrome;Odd even sum;Has duplicate element in array).
-Contact_list & Task_list contains solution for - 7.Struct in Golang.
-Testing - 8.Unit Tests in Golang.
-PostgreSQL_tasks - 14.Tasks for Postgres.
-gRPC - 16.Tasks for gRPC.
+4.Tasks for syntax:(Fibonacci;FizBuzz;Palindrome;Odd even sum;Has duplicate element in array) - In git_tasks.
+7.Struct in Golang - Contact_list & Task_list contains solution for.
+8.Unit Tests in Golang - Testing.
+14.Tasks for Postgres - PostgreSQL_tasks.
+16.Tasks for gRPC - gRPC.
