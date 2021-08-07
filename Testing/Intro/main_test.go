@@ -1,17 +1,6 @@
-// https://tutorialedge.net/golang/intro-testing-in-go/
-
 package main
 
-import (
-	"fmt"
-	"testing"
-)
-
-// Calculate returns x + 2.
-func Calculate(x int) (result int) {
-	result = x + 2
-	return result
-}
+import "testing"
 
 func TestCalculate(t *testing.T) {
     if Calculate(2) != 4 {
@@ -38,6 +27,3 @@ func TestTableCalculate(t *testing.T) {
     }
 }
 
-func main() {
-	fmt.Println("Hello World")
-}
