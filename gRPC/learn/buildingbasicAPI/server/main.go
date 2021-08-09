@@ -2,7 +2,8 @@ package main
 
 import (
 	"context"
-	"grpc_tutorial/proto"
+    //  "~/Workspace/udevs_tasks/gRPC/learn/buildingbasicAPI/proto"
+    "buildingbasicAPI/proto"
 	"net"
 	
 	"google.golang.org/grpc"
