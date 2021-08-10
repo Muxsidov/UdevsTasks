@@ -3,7 +3,8 @@ package main
 import (
 	"context"
     //  "~/Workspace/udevs_tasks/gRPC/learn/buildingbasicAPI/proto"
-    "fake.com/buildingbasicAPI/proto"
+    //"github.com/Muxsidov/udevs_tasks/tree/main/gRPC/learn/buildingbasicAPI/proto"
+    "buildingbasicAPI/proto"
 	"net"
 	
 	"google.golang.org/grpc"
