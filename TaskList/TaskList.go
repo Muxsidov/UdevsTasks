@@ -52,9 +52,9 @@ func (c *Contact) TaskDetail() {
 	fmt.Println("**************************")
 	fmt.Println("name:", c.TaskName)
 	fmt.Println("id:", c.Id)
-	fmt.Println("gender:", c.WhomTaskIsGiven)
-	fmt.Println("phone:", c.DeadLine)
-	fmt.Println("mail:", c.ExplainingOfTask)
+	fmt.Println("towho:", c.WhomTaskIsGiven)
+	fmt.Println("deadline:", c.DeadLine)
+	fmt.Println("explaining:", c.ExplainingOfTask)
 	fmt.Println()
 }
 
@@ -81,17 +81,17 @@ func EnterDetails(c *Task) {
 
 	fmt.Print("Enter name: ")
 	fmt.Scanln(&name)
-	fmt.Print("Enter gender: ")
+	fmt.Print("Enter to whom: ")
 	fmt.Scanln(&towho)
-	fmt.Print("Enter phone: ")
+	fmt.Print("Enter deadline: ")
 	fmt.Scanln(&deadline)
-	fmt.Print("Enter mail: ")
+	fmt.Print("Enter explaining: ")
 	fmt.Scanln(&explaining)
 
 	c.Task_Name = name
-	c.Whomtaskisgiven = gender
-	c.Deadline = phone
-	c.Explaining_of_task = mail
+	c.Whomtaskisgiven = towho
+	c.Deadline = deadline
+	c.Explaining_of_task = explaining
 }
 
 func main() {
