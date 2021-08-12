@@ -1,4 +1,4 @@
-package models
+package contact
 
 import (
 	_ "database/sql"
@@ -8,6 +8,22 @@ import (
 	_ "github.com/lib/pq"
 )
 
+type Contact struct {
+	Id     int    `db: "id"`
+	Name   string `db: "name"`
+	Age    int    `db: "age"`
+	Gender string `db: "gender"`
+	Phone  string `db: "phone"`
+}
+
+type ContactManagerI interface {
+	Add(c Contact) error
+	Update(id int, c Contact) error
+	Delete(id int) error
+	GetAll() ([]Contact, error)
+	ListAll() error
+}
+
 type ContactManager struct {
 	db *sqlx.DB
 }
@@ -15,7 +31,7 @@ type ContactManager struct {
 func NewContactManager() (ContactManagerI, error) {
 	cm := ContactManager{}
 	var err error
-	cm.db, err = sqlx.Connect("postgres", "user=temur password=12345 dbname=test sslmode=disable")
+	cm.db, err = sqlx.Connect("postgres", "user=postgres password=1234qwer dbname=Contactlistdb sslmode=disable")
 
 	if err != nil {
 		return nil, err

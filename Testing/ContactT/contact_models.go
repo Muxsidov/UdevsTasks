@@ -1,4 +1,4 @@
-package models
+package contact
 
 type Contact struct {
 	Id     int    `db: "id"`

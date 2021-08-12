@@ -6,6 +6,7 @@ import (
 	"database/sql"
 	"fmt"
 
+	//"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 )
 
@@ -18,6 +19,10 @@ const (
 	dbname   = "Contactlistdb"
 )
 
+type ContactManager struct {
+	db *sql.DB
+}
+
 // Create a struct for SELECT *
 type Contact struct {
 	Id     int
@@ -25,6 +30,24 @@ type Contact struct {
 	Gender string
 	Phone  int
 	Mail   string
+}
+
+func NewContactManager() (ContactManager, error) {
+	cm := ContactManager{}
+	var err error
+
+	// Creating the connection string
+	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+"password=%s dbname=%s sslmode=disable",
+		host, port, user, password, dbname)
+
+	// Opening and checking if we opened connector correctly
+	db, err := sql.Open("postgres", psqlInfo)
+	if err != nil {
+		panic(err)
+	}
+	defer db.Close()
+
+	return cm, nil
 }
 
 func Menu() {
@@ -40,17 +63,8 @@ func Menu() {
 	fmt.Println("**************************")
 }
 
-func Add(c *Contact) {
-	// Creating the connection string
-	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+"password=%s dbname=%s sslmode=disable",
-		host, port, user, password, dbname)
-
-	// Opening and checking if we opened connector correctly
-	db, err := sql.Open("postgres", psqlInfo)
-	if err != nil {
-		panic(err)
-	}
-	defer db.Close()
+func (cm *ContactManager) Add(c *Contact) error {
+	// func Add(c *Contact) error{
 
 	// Inserting
 	sqlStatement := `
@@ -58,25 +72,17 @@ func Add(c *Contact) {
 	VALUES ($1, $2, $3, $4)
 	RETURNING id`
 	id := 0
-	err = db.QueryRow(sqlStatement, &c.Name, &c.Gender, &c.Phone, &c.Mail).Scan(&id)
-	if err != nil {
-		panic(err)
-	}
+	cm.db.QueryRow(sqlStatement, &c.Name, &c.Gender, &c.Phone, &c.Mail).Scan(&id)
+	//	err = db.QueryRow(sqlStatement, &c.Name, &c.Gender, &c.Phone, &c.Mail).Scan(&id)
+	//	if err != nil {
+	//		panic(err)
+	//	}
 	fmt.Println("New record ID is:", id)
+	return nil
 }
 
-func Update(c *Contact) {
-
-	// Creating the connection string
-	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+"password=%s dbname=%s sslmode=disable",
-		host, port, user, password, dbname)
-
-	// Opening and checking if we opened connector correctly
-	db, err := sql.Open("postgres", psqlInfo)
-	if err != nil {
-		panic(err)
-	}
-	defer db.Close()
+func (cm *ContactManager) Update(c *Contact) {
+	var err error
 
 	// Updating
 	sqlStatement := `
@@ -86,31 +92,19 @@ func Update(c *Contact) {
 	RETURNING id, name;`
 	var name string
 	var id int
-	err = db.QueryRow(sqlStatement, &c.Id, &c.Name, &c.Gender, &c.Phone, &c.Mail).Scan(&id, &name)
+	err = cm.db.QueryRow(sqlStatement, &c.Id, &c.Name, &c.Gender, &c.Phone, &c.Mail).Scan(&id, &name)
 	if err != nil {
 		panic(err)
 	}
 	fmt.Println(id, name)
 }
 
-func Delete(c *Contact) {
-
-	// Creating the connection string
-	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+"password=%s dbname=%s sslmode=disable",
-		host, port, user, password, dbname)
-
-	// Opening and checking if we opened connector correctly
-	db, err := sql.Open("postgres", psqlInfo)
-	if err != nil {
-		panic(err)
-	}
-	defer db.Close()
-
+func (cm *ContactManager) Delete(c *Contact) {
 	// Deleting
 	sqlStatement := `
 	DELETE FROM contacts
 	WHERE id = $1;`
-	res, err := db.Exec(sqlStatement, &c.Id)
+	res, err := cm.db.Exec(sqlStatement, &c.Id)
 	if err != nil {
 		panic(err)
 	}
@@ -124,20 +118,9 @@ func Delete(c *Contact) {
 
 }
 
-func ContactList() {
+func (cm *ContactManager) ContactList() {
 
-	// Creating the connection string
-	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+"password=%s dbname=%s sslmode=disable",
-		host, port, user, password, dbname)
-
-	// Opening and checking if we opened connector correctly
-	db, err := sql.Open("postgres", psqlInfo)
-	if err != nil {
-		panic(err)
-	}
-	defer db.Close()
-
-	rows, err := db.Query("SELECT id, name, phone, email FROM contacts LIMIT $1", 3)
+	rows, err := cm.db.Query("SELECT id, name, phone, email FROM contacts LIMIT $1", 3)
 	if err != nil {
 		// handle this error better than this
 		panic(err)
@@ -183,6 +166,7 @@ func main() {
 
 	var choice int
 	var id int
+	var cm ContactManager
 	var c Contact
 
 	for {
@@ -191,24 +175,23 @@ func main() {
 		fmt.Scan(&choice)
 
 		if choice == 1 {
-			ContactList()
+			cm.ContactList()
 		} else if choice == 2 {
 			EnterDetails(&c)
-			Add(&c)
+			cm.Add(&c)
 		} else if choice == 3 {
 			fmt.Print("Enter id: ")
 			fmt.Scanln(&id)
 			c.Id = id
 			EnterDetails(&c)
-			Update(&c)
+			cm.Update(&c)
 		} else if choice == 4 {
 			fmt.Print("Enter id: ")
 			fmt.Scanln(&id)
 			c.Id = id
-			Delete(&c)
+			cm.Delete(&c)
 		} else if choice == 5 {
 			break
 		}
 	}
 }
-
