@@ -1,0 +1,61 @@
+syntax = "proto3";
+
+package contact;
+
+//option go_package = "github.com/Muxsidov/CRUD-gRPC/contactpb";
+option go_package = ".;contactpb";
+
+message Contact {
+    string id = 1;
+    string name = 2;
+    string number = 3;
+    string mail= 4;
+}
+
+message CreateContactReq {
+    Contact contact = 1; // Blog id blank
+}
+
+message CreateContactRes {
+    Contact contact = 1; // Blog id filled in
+}
+
+message ReadContactReq {
+    string id = 1;
+}
+
+message ReadContactRes {
+    Contact contact = 1;
+}
+
+message UpdateContactReq {
+    Contact contact = 1;
+}
+
+message UpdateContactRes {
+    Contact contact = 1;
+}
+
+message DeleteContactReq {
+    string id = 1;
+}
+
+message DeleteContactRes {
+    bool success = 1;
+}
+
+message ListContactReq {}
+
+message ListContactRes {
+    Contact blog = 1;
+}
+
+
+
+service ContactService {
+    rpc CreateContact(CreateContactReq) returns (CreateContactRes);
+    rpc ReadContact(ReadContactReq) returns (ReadContactRes);
+    rpc UpdateContact(UpdateContactReq) returns (UpdateContactRes);
+    rpc DeleteContact(DeleteContactReq) returns (DeleteContactRes);
+    rpc ListContact(ListContactReq) returns (stream ListContactRes);
+}
